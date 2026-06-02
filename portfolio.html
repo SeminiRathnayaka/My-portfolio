@@ -31,6 +31,28 @@
   --text-mid:#555;
   --tag-bg:#FDE98B;
   --shadow:0 4px 20px rgba(0,0,0,0.08);
+  --glow-shadow:0 0 20px rgba(245,200,66,0.3);
+}
+
+/* ── ANIMATED BACKGROUND ── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(245, 200, 66, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(91, 200, 192, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+  animation: bgShift 12s ease-in-out infinite;
+}
+
+@keyframes bgShift {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.8; }
 }
 
 .theme-btn {
@@ -50,7 +72,7 @@
 }
 
 .theme-btn:hover {
-  transform: scale(1.1);
+  transform: scale(1.1) rotateZ(20deg);
 }
 /* ─────────────────────────────
    DARK MODE
@@ -65,6 +87,13 @@
   --white:#111827;
   --text-dark:#f8fafc;
   --text-mid:#cbd5e1;
+  --glow-shadow:0 0 20px rgba(245,200,66,0.2);
+}
+
+[data-theme="dark"]::before {
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(15, 23, 42, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(91, 200, 192, 0.05) 0%, transparent 50%);
 }
 
 /* ─────────────────────────────
@@ -103,6 +132,8 @@ html {
 .custom-cursor.hover {
   width: 40px;
   height: 40px;
+  background: rgba(245, 200, 66, 0.3);
+  border-color: rgba(245, 200, 66, 0.6);
 }
 
 /* ─────────────────────────────
@@ -114,7 +145,7 @@ body {
   color: var(--text-dark);
   overflow-x: hidden;
   font-size: 18px;
-  transition: 0.3s ease;
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 /* ─────────────────────────────
@@ -158,7 +189,7 @@ body {
 }
 .hero h1 span { color:#FFFFFF; text-shadow:0 2px 10px rgba(0,0,0,0.2); }
 .hero .sub { font-size:clamp(0.9rem,2.5vw,1.2rem); color:var(--text-dark); font-style:italic; margin-top:6px; animation:heroFade 1s 0.3s ease both; text-align:center; }
-.hero .tagline { font-size:clamp(0.7rem,1.8vw,0.95rem); font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text-dark); opacity:0.65; margin-top:12px; animation:heroFade 1s 0.4s both; }
+.hero .tagline { font-size:clamp(0.7rem,1.8vw,0.95rem); font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--text-dark); opacity:0.65; margin-top:12px; animation:heroFade 1s 0.4s ease both; }
 /* ── WRAP ── */
 .wrap { max-width:780px; margin:0 auto; padding:0 clamp(18px,5vw,42px); }
 
@@ -179,7 +210,14 @@ body {
   border-radius:50%; overflow:hidden;
   border:5px solid var(--yellow); box-shadow:0 8px 36px rgba(0,0,0,0.16);
   background:#F2D9C0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
+.bio-left-col:hover .big-profile-circle {
+  transform: scale(1.03);
+  box-shadow: 0 12px 40px rgba(245, 200, 66, 0.2);
+}
+
 .big-profile-circle img { width:100%; height:100%; object-fit:cover; object-position:center top; }
 .cv-btn {
   display:inline-flex; flex-direction:column; align-items:center; gap:2px;
@@ -187,9 +225,9 @@ body {
   font-family:'Nunito',sans-serif; text-decoration:none;
   padding:11px 20px; border-radius:30px;
   box-shadow:0 4px 16px rgba(245,200,66,0.4); border:none;
-  transition:background 0.2s,transform 0.2s; text-align:center;
+  transition:background 0.3s, transform 0.3s, box-shadow 0.3s; text-align:center;
 }
-.cv-btn:hover { background:var(--yellow-dark); transform:translateY(-2px); color:#fff; }
+.cv-btn:hover { background:var(--yellow-dark); transform:translateY(-4px) scale(1.05); color:#fff; box-shadow: 0 8px 24px rgba(245,200,66,0.5); }
 .cv-btn-label { font-size:0.88rem; font-weight:900; }
 .cv-btn-name { font-size:0.65rem; font-weight:700; opacity:0.72; line-height:1.4; }
 
@@ -199,6 +237,11 @@ body {
   padding:clamp(12px,2.5vw,17px) clamp(14px,3vw,22px);
   font-size:clamp(0.85rem,2vw,1.02rem); line-height:1.8;
   color:var(--text-mid); box-shadow:var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.bubble:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glow-shadow);
 }
 .bubble strong { color:var(--text-dark); }
 
@@ -221,31 +264,35 @@ body {
   width:clamp(56px,8vw,74px); height:clamp(56px,8vw,74px);
   border-radius:16px; display:flex; align-items:center; justify-content:center;
   font-size:clamp(1.5rem,3.5vw,2rem);
-  transition:transform 0.25s,box-shadow 0.25s;
+  transition:transform 0.3s ease, box-shadow 0.3s ease;
 }
-.ab-icon:hover { transform:translateY(-5px); box-shadow:0 10px 24px rgba(0,0,0,0.13); }
+.ab-icon:hover { transform:translateY(-8px) scale(1.1); box-shadow: 0 12px 30px rgba(0,0,0,0.15), var(--glow-shadow); }
 .ab-item span { font-size:clamp(0.72rem,1.6vw,0.88rem); font-weight:700; color:var(--text-mid); }
 
 /* ── TIMELINE ── */
 .timeline { position:relative; padding-left:clamp(20px,4vw,30px); }
 .timeline::before { content:''; position:absolute; left:9px; top:6px; bottom:6px; width:2px; background:var(--yellow-light); border-radius:2px; }
 .tl-item { position:relative; margin-bottom:28px; }
-.tl-dot { position:absolute; left:-24px; top:7px; width:14px; height:14px; border-radius:50%; border:3px solid var(--white); box-shadow:0 0 0 2px var(--yellow-dark); }
+.tl-dot { position:absolute; left:-24px; top:7px; width:14px; height:14px; border-radius:50%; border:3px solid var(--white); box-shadow:0 0 0 2px var(--yellow-dark); transition: transform 0.3s ease; }
+.tl-item:hover .tl-dot { transform: scale(1.2); }
 .tl-year { display:inline-block; font-size:clamp(0.78rem,1.8vw,0.88rem); font-weight:900; letter-spacing:1px; color:var(--yellow-dark); margin-bottom:6px; }
-.tl-card { background:var(--white); border-radius:14px; padding:clamp(14px,2.5vw,18px) clamp(16px,3vw,22px); box-shadow:var(--shadow); border-left:4px solid var(--yellow); }
+.tl-card { background:var(--white); border-radius:14px; padding:clamp(14px,2.5vw,18px) clamp(16px,3vw,22px); box-shadow:var(--shadow); border-left:4px solid var(--yellow); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.tl-item:hover .tl-card { transform: translateX(4px); box-shadow: var(--glow-shadow); }
 .tl-card h3 { font-family:'Playfair Display',serif; font-size:clamp(0.95rem,2.2vw,1.18rem); font-weight:700; color:var(--text-dark); }
 .tl-card p { font-size:clamp(0.82rem,1.8vw,0.95rem); color:var(--text-mid); margin-top:5px; line-height:1.65; }
 .tl-card .tl-place { font-style:italic; opacity:0.75; font-size:clamp(0.75rem,1.6vw,0.85rem); }
 
 /* ── PROJECTS ── */
-.proj-card { background:var(--white); border-radius:16px; padding:clamp(18px,3vw,24px) clamp(20px,3.5vw,26px); margin-bottom:22px; box-shadow:var(--shadow); border-left:4px solid var(--yellow); transition:transform 0.2s,box-shadow 0.2s; }
-.proj-card:hover { transform:translateY(-3px); box-shadow:0 10px 30px rgba(0,0,0,0.1); }
-.proj-num { display:inline-block; font-size:clamp(0.62rem,1.5vw,0.74rem); font-weight:900; letter-spacing:2px; text-transform:uppercase; color:var(--white); padding:4px 13px; border-radius:20px; margin-bottom:8px; }
+.proj-card { background:var(--white); border-radius:16px; padding:clamp(18px,3vw,24px) clamp(20px,3.5vw,26px); margin-bottom:22px; box-shadow:var(--shadow); border-left:4px solid var(--yellow); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.proj-card:hover { transform:translateY(-6px) scale(1.01); box-shadow: 0 12px 40px rgba(245,200,66,0.3); }
+.proj-num { display:inline-block; font-size:clamp(0.62rem,1.5vw,0.74rem); font-weight:900; letter-spacing:2px; text-transform:uppercase; color:var(--white); padding:4px 13px; border-radius:20px; margin-bottom:8px; transition: transform 0.3s ease; }
+.proj-card:hover .proj-num { transform: scale(1.08); }
 .proj-card h3 { font-family:'Playfair Display',serif; font-size:clamp(1rem,2.5vw,1.28rem); font-weight:700; margin-bottom:9px; }
 .proj-short { font-size:clamp(0.85rem,2vw,0.97rem); color:var(--text-mid); line-height:1.72; }
 .proj-tech { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
-.proj-tech span { font-size:clamp(0.65rem,1.5vw,0.74rem); font-weight:800; background:var(--tag-bg); color:var(--text-dark); padding:4px 11px; border-radius:10px; }
-.see-more-btn { display:inline-flex; align-items:center; gap:5px; margin-top:14px; font-size:clamp(0.78rem,1.8vw,0.88rem); font-weight:800; color:var(--yellow-dark); background:none; border:none; padding:0; cursor:pointer; transition:gap 0.3s; }
+.proj-tech span { font-size:clamp(0.65rem,1.5vw,0.74rem); font-weight:800; background:var(--tag-bg); color:var(--text-dark); padding:4px 11px; border-radius:10px; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.proj-tech span:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245,200,66,0.3); }
+.see-more-btn { display:inline-flex; align-items:center; gap:5px; margin-top:14px; font-size:clamp(0.78rem,1.8vw,0.88rem); font-weight:800; color:var(--yellow-dark); background:none; border:none; padding:0; cursor:pointer; transition: gap 0.3s, color 0.3s; }
 .see-more-btn:hover { gap:9px; color:var(--coral); }
 .see-more-btn .arrow { font-size:0.95rem; display:inline-block; transition:transform 0.3s; }
 .proj-detail { overflow:hidden; max-height:0; transition:max-height 0.55s cubic-bezier(0.4,0,0.2,1),opacity 0.4s ease; opacity:0; }
@@ -255,19 +302,20 @@ body {
 /* ── SKILLS ── */
 .skills-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px 40px; }
 .skill-label { display:flex; justify-content:space-between; font-size:clamp(0.8rem,1.8vw,0.9rem); font-weight:700; margin-bottom:6px; }
-.skill-bar { height:11px; background:#EEEBE0; border-radius:10px; overflow:hidden; }
-.skill-fill { height:100%; border-radius:10px; background:var(--yellow); width:0; transition:width 1.5s cubic-bezier(.4,0,.2,1); }
+.skill-bar { height:11px; background:#EEEBE0; border-radius:10px; overflow:hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
+.skill-fill { height:100%; border-radius:10px; background:var(--yellow); width:0; transition:width 2s cubic-bezier(.4,0,.2,1); box-shadow: 0 0 8px rgba(245,200,66,0.4); }
 .skill-fill.t{background:var(--teal);} .skill-fill.c{background:var(--coral);} .skill-fill.b{background:var(--blue-soft);} .skill-fill.p{background:var(--purple);}
 
 /* ── CHIPS ── */
 .chips { display:flex; flex-wrap:wrap; gap:10px; }
-.chip { display:flex; align-items:center; gap:8px; background:var(--white); border-radius:30px; padding:clamp(8px,1.5vw,11px) clamp(14px,2.5vw,20px); font-size:clamp(0.82rem,1.8vw,0.95rem); font-weight:700; color:var(--text-mid); box-shadow:var(--shadow); transition:transform 0.2s,box-shadow 0.2s; }
-.chip:hover { transform:translateY(-3px); box-shadow:0 8px 22px rgba(0,0,0,0.11); }
+.chip { display:flex; align-items:center; gap:8px; background:var(--white); border-radius:30px; padding:clamp(8px,1.5vw,11px) clamp(14px,2.5vw,20px); font-size:clamp(0.82rem,1.8vw,0.95rem); font-weight:700; color:var(--text-dark); box-shadow:var(--shadow); transition:transform 0.3s, box-shadow 0.3s; }
+.chip:hover { transform:translateY(-4px) scale(1.05); box-shadow: 0 10px 28px rgba(0,0,0,0.12), var(--glow-shadow); }
 
 /* ── LANGUAGES ── */
 .lang-row { display:flex; gap:clamp(14px,3vw,22px); flex-wrap:wrap; }
 .lang-item { text-align:center; }
-.lang-circle { width:clamp(58px,10vw,76px); height:clamp(58px,10vw,76px); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:clamp(0.68rem,1.5vw,0.82rem); font-weight:900; color:#fff; }
+.lang-circle { width:clamp(58px,10vw,76px); height:clamp(58px,10vw,76px); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:clamp(0.68rem,1.5vw,0.82rem); font-weight:800; color:#fff; transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.lang-item:hover .lang-circle { transform: scale(1.08) rotateZ(-5deg); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
 .lang-item span { font-size:clamp(0.75rem,1.6vw,0.85rem); font-weight:700; color:var(--text-mid); }
 
 /* ── CONTACT — logo + name only ── */
@@ -281,27 +329,31 @@ body {
   background:var(--white); border-radius:16px;
   padding:20px 16px; box-shadow:var(--shadow);
   text-decoration:none; color:var(--text-dark);
-  transition:transform 0.2s,box-shadow 0.2s;
+  transition:transform 0.3s, box-shadow 0.3s;
   cursor:pointer;
 }
-.contact-card:hover { transform:translateY(-4px); box-shadow:0 10px 28px rgba(0,0,0,0.1); }
+.contact-card:hover { transform:translateY(-6px) scale(1.04); box-shadow: 0 12px 32px rgba(0,0,0,0.12), var(--glow-shadow); }
 .contact-card .cc-icon {
   width:52px; height:52px; border-radius:14px;
   display:flex; align-items:center; justify-content:center;
   font-size:0; flex-shrink:0;
+  transition: transform 0.3s ease;
 }
+.contact-card:hover .cc-icon { transform: rotateZ(8deg); }
 .contact-card .cc-icon svg { width:30px; height:30px; }
 .contact-card .cc-name { font-size:0.82rem; font-weight:800; color:var(--text-dark); text-align:center; }
 
 /* ── EMAIL FORM ── */
-.email-form { background:var(--white); border-radius:18px; padding:clamp(22px,4vw,30px) clamp(20px,4vw,32px); box-shadow:var(--shadow); margin-top:10px; }
+.email-form { background:var(--white); border-radius:18px; padding:clamp(22px,4vw,30px) clamp(20px,4vw,32px); box-shadow:var(--shadow); margin-top:10px; transition: box-shadow 0.3s ease; }
+.email-form:hover { box-shadow: var(--glow-shadow); }
 .email-form h3 { font-family:'Playfair Display',serif; font-size:clamp(1.05rem,2.5vw,1.32rem); font-weight:700; margin-bottom:20px; }
 .form-row { margin-bottom:14px; }
 .form-row label { display:block; font-size:0.75rem; font-weight:800; letter-spacing:1px; text-transform:uppercase; color:var(--text-mid); margin-bottom:6px; }
-.form-row input, .form-row textarea { width:100%; padding:13px 17px; font-family:'Nunito',sans-serif; font-size:clamp(0.88rem,2vw,0.97rem); border:2px solid #EEE; border-radius:10px; background:var(--white); transition:border 0.2s; }
-.form-row input:focus, .form-row textarea:focus { border-color:var(--yellow); }
-.send-btn { background:var(--yellow); color:var(--text-dark); border:none; padding:14px 32px; font-family:'Nunito',sans-serif; font-size:clamp(0.88rem,2vw,0.97rem); font-weight:800; border-radius:30px; box-shadow:0 4px 16px rgba(245,200,66,0.4); transition:background 0.2s,transform 0.2s; cursor:pointer; }
-.send-btn:hover { background:var(--yellow-dark); transform:translateY(-2px); }
+.form-row input, .form-row textarea { width:100%; padding:13px 17px; font-family:'Nunito',sans-serif; font-size:clamp(0.88rem,2vw,0.97rem); border:2px solid #EEE; border-radius:10px; background:var(--white); transition: border-color 0.3s, box-shadow 0.3s; }
+.form-row input:hover, .form-row textarea:hover { border-color: var(--yellow-light); }
+.form-row input:focus, .form-row textarea:focus { border-color:var(--yellow); box-shadow: 0 0 12px rgba(245,200,66,0.2); outline: none; }
+.send-btn { background:var(--yellow); color:var(--text-dark); border:none; padding:14px 32px; font-family:'Nunito',sans-serif; font-size:clamp(0.88rem,2vw,0.97rem); font-weight:800; border-radius:30px; cursor:pointer; transition: background 0.3s, transform 0.3s, box-shadow 0.3s; }
+.send-btn:hover { background:var(--yellow-dark); transform:translateY(-3px) scale(1.05); box-shadow: 0 8px 24px rgba(245,200,66,0.4); }
 .form-success { display:none; margin-top:13px; font-size:0.92rem; font-weight:700; color:var(--teal); }
 
 /* ── TWO-PANEL ── */
@@ -316,21 +368,24 @@ body {
   align-items:center; justify-content:center; text-align:center;
   text-decoration:none;
   background:#1A1A1A; border-radius:18px;
-  transition:transform 0.3s,box-shadow 0.3s;
+  transition:transform 0.3s, box-shadow 0.3s;
   position:relative; overflow:hidden;
   cursor:pointer;
 }
-.panel:hover { transform:translateY(-4px); box-shadow:0 14px 40px rgba(0,0,0,0.2); }
+.panel:hover { transform:translateY(-6px) scale(1.02); box-shadow: 0 16px 48px rgba(0,0,0,0.25), 0 0 20px rgba(245,200,66,0.25); }
 .panel-logo {
   width:clamp(60px,12vw,90px); height:clamp(60px,12vw,90px);
   object-fit:contain; margin-bottom:14px;
-  filter:invert(1); /* show white logo on dark bg */
+  filter:invert(1); 
+  transition: transform 0.3s ease;
 }
-.panel-emoji { font-size:clamp(1.8rem,4vw,2.6rem); margin-bottom:14px; }
+.panel:hover .panel-logo { transform: scale(1.1) rotateZ(-5deg); }
+.panel-emoji { font-size:clamp(1.8rem,4vw,2.6rem); margin-bottom:14px; transition: transform 0.3s ease; }
+.panel:hover .panel-emoji { transform: scale(1.15); }
 .panel h3 { font-family:'Playfair Display',serif; font-size:clamp(1.1rem,2.8vw,1.45rem); font-weight:900; color:#fff; margin-bottom:8px; }
 .panel p { font-size:clamp(0.72rem,1.6vw,0.8rem); font-weight:700; color:rgba(255,255,255,0.45); letter-spacing:1.5px; text-transform:uppercase; }
-.panel-arrow { margin-top:18px; font-size:1.2rem; color:rgba(255,255,255,0.3); transition:color 0.2s,transform 0.2s; }
-.panel:hover .panel-arrow { color:var(--yellow); transform:translateX(6px); }
+.panel-arrow { margin-top:18px; font-size:1.2rem; color:rgba(255,255,255,0.3); transition:color 0.3s, transform 0.3s; }
+.panel:hover .panel-arrow { color:var(--yellow); transform:translateX(8px); }
 
 /* ── FOOTER ── */
 .footer { background:#000; text-align:center; padding:20px; margin-top:0; }
@@ -350,21 +405,21 @@ body {
 /* ── BIDIRECTIONAL SCROLL REVEAL ── */
 .reveal {
   opacity:0; transform:translateY(32px);
-  transition:opacity 0.65s ease, transform 0.65s ease;
+  transition:opacity 0.7s ease, transform 0.7s ease;
 }
 .reveal.visible { opacity:1 !important; transform:translateY(0) !important; }
 .reveal.hide    { opacity:0 !important; transform:translateY(32px) !important; }
 
 .reveal-l {
   opacity:0; transform:translateX(-28px);
-  transition:opacity 0.6s ease, transform 0.6s ease;
+  transition:opacity 0.65s ease, transform 0.65s ease;
 }
 .reveal-l.visible { opacity:1 !important; transform:translateX(0) !important; }
 .reveal-l.hide    { opacity:0 !important; transform:translateX(-28px) !important; }
 
 .bubble {
   opacity:0; transform:translateY(16px);
-  transition:opacity 0.5s ease, transform 0.5s ease;
+  transition:opacity 0.55s ease, transform 0.55s ease;
 }
 .bubble.visible { opacity:1 !important; transform:translateY(0) !important; }
 .bubble.hide    { opacity:0 !important; transform:translateY(16px) !important; }
@@ -373,16 +428,16 @@ body {
 
 .stagger > * {
   opacity:0; transform:translateY(20px);
-  transition:opacity 0.45s ease, transform 0.45s ease;
+  transition:opacity 0.5s ease, transform 0.5s ease;
 }
 .stagger.visible > *:nth-child(1){opacity:1;transform:none;transition-delay:0s;}
-.stagger.visible > *:nth-child(2){opacity:1;transform:none;transition-delay:.07s;}
-.stagger.visible > *:nth-child(3){opacity:1;transform:none;transition-delay:.14s;}
-.stagger.visible > *:nth-child(4){opacity:1;transform:none;transition-delay:.21s;}
-.stagger.visible > *:nth-child(5){opacity:1;transform:none;transition-delay:.28s;}
-.stagger.visible > *:nth-child(6){opacity:1;transform:none;transition-delay:.35s;}
-.stagger.visible > *:nth-child(7){opacity:1;transform:none;transition-delay:.42s;}
-.stagger.visible > *:nth-child(8){opacity:1;transform:none;transition-delay:.49s;}
+.stagger.visible > *:nth-child(2){opacity:1;transform:none;transition-delay:.08s;}
+.stagger.visible > *:nth-child(3){opacity:1;transform:none;transition-delay:.16s;}
+.stagger.visible > *:nth-child(4){opacity:1;transform:none;transition-delay:.24s;}
+.stagger.visible > *:nth-child(5){opacity:1;transform:none;transition-delay:.32s;}
+.stagger.visible > *:nth-child(6){opacity:1;transform:none;transition-delay:.40s;}
+.stagger.visible > *:nth-child(7){opacity:1;transform:none;transition-delay:.48s;}
+.stagger.visible > *:nth-child(8){opacity:1;transform:none;transition-delay:.56s;}
 .stagger.hide > *{ opacity:0 !important; transform:translateY(20px) !important; transition-delay:0s !important; }
 
 /* ── RESPONSIVE ── */
@@ -412,7 +467,7 @@ body {
   <button id="themeToggle" class="theme-btn">🌙</button>
 
   <div class="hero-illus">
-    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAA=" alt="hero illustration"/>
+    <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAA/4AAABX/gAABlA/9b/9iAdQBkAGEAbgBhAEgAaQBnAGgA" alt="Hero Illustration"/>
   </div>
   <h1>Hello, I'm <span>Yashodya!</span></h1>
   <p class="sub">This is my Portfolio ✨</p>
@@ -423,7 +478,7 @@ body {
 <div class="bio-section reveal">
   <div class="bio-left-col">
     <div class="big-profile-circle">
-      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADT" alt="profile"/>
+      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAA/4AAABX/" alt="Profile"/>
     </div>
     <a class="cv-btn" href="#" download>
       <span class="cv-btn-label">⬇️ Download CV</span>
@@ -431,9 +486,9 @@ body {
     </a>
   </div>
   <div class="bio-right">
-    <div class="bubble">Hi there! 👋 I'm <strong>N. S. Yashodya Rathnayaka</strong> — a <strong>Health Information and Communication Technology</strong> student from Sri Lanka, with a deep passion for AI, healthcare tech, and creative coding.</div>
-    <div class="bubble">I'm a <strong>good team player</strong> and a coder who loves solving real problems. I'm working toward building my own <strong>customized AI for the healthcare field</strong> that actually makes a difference.</div>
-    <div class="bubble"><strong>Curiosity and consistency</strong> drive everything I do. I'm passionate about learning deeply, building meaningful projects, and continuously growing through technology.</div>
+    <div class="bubble">Hi there! 👋 I'm <strong>N. S. Yashodya Rathnayaka</strong> — a <strong>Health Information and Communication Technology</strong> student from Sri Lanka, with a deep passion for AI, healthcare innovation, and building solutions that matter.</div>
+    <div class="bubble">I'm a <strong>good team player</strong> and a coder who loves solving real problems. I'm working toward building my own <strong>customized AI for the healthcare field</strong> that genuinely improves people's lives.</div>
+    <div class="bubble"><strong>Curiosity and consistency</strong> drive everything I do. I'm passionate about learning deeply, building meaningful projects, and continuously growing through technology and collaboration.</div>
   </div>
 </div>
 
@@ -503,12 +558,12 @@ body {
     <div class="proj-num" style="background:var(--coral);">Project 01</div>
     <h3>Orayan AI 🌿</h3>
     <p class="proj-short">Bridging the gap between complex medical language and everyday understanding — so no patient ever feels lost or afraid again.</p>
-    <p class="proj-short" style="margin-top:8px;">Medical reports are full of confusing terms. Orayan AI reads the report and explains it clearly in <strong>Sinhala or simple English</strong> — like a doctor who has all the time in the world.</p>
+    <p class="proj-short" style="margin-top:8px;">Medical reports are full of confusing terms. Orayan AI reads the report and explains it clearly in <strong>Sinhala or simple English</strong> — no jargon, no fear.</p>
     <div class="proj-tech"><span>Python</span><span>NLP</span><span>Sinhala TTS</span><span>Healthcare AI</span></div>
     <button class="see-more-btn" onclick="toggleDetail(this)">See More <span class="arrow">›</span></button>
     <div class="proj-detail"><div class="proj-detail-inner">
       <strong>The Problem:</strong> Thousands of Sri Lankan patients receive medical reports they cannot understand, causing anxiety and delays in treatment.<br/><br/>
-      <strong>The Solution:</strong> Orayan AI generates a plain-language explanation in Sinhala or simple English — identifying key terms, diagnosis highlights, and recommended actions in a calm tone.<br/><br/>
+      <strong>The Solution:</strong> Orayan AI generates a plain-language explanation in Sinhala or simple English — identifying key terms, diagnosis highlights, and recommended actions in a calm, compassionate tone.<br/><br/>
       <strong>Impact:</strong> Reducing patient stress, improving health literacy, empowering people to understand their own health. 💙<br/><br/><em>Full details and demo coming soon.</em>
     </div></div>
   </div>
@@ -517,7 +572,7 @@ body {
     <div class="proj-num" style="background:var(--teal);">Project 02</div>
     <h3>ASTERIA — V1 🌟</h3>
     <p class="proj-short">Turning therapy into play — because healing should never feel like a burden, especially for a child.</p>
-    <p class="proj-short" style="margin-top:8px;">A hand and body tracker built into a <strong>fun puzzle game</strong> designed for paralyzed or disabled children. Movement becomes gameplay — therapy through joy.</p>
+    <p class="proj-short" style="margin-top:8px;">A hand and body tracker built into a <strong>fun puzzle game</strong> designed for paralyzed or disabled children. Movement becomes gameplay — therapy without the pain.</p>
     <div class="proj-tech"><span>OpenCV</span><span>MediaPipe</span><span>Python</span><span>Game Dev</span></div>
     <button class="see-more-btn" onclick="toggleDetail(this)">See More <span class="arrow">›</span></button>
     <div class="proj-detail"><div class="proj-detail-inner">
@@ -536,7 +591,7 @@ body {
     <button class="see-more-btn" onclick="toggleDetail(this)">See More <span class="arrow">›</span></button>
     <div class="proj-detail"><div class="proj-detail-inner">
       <strong>The Problem:</strong> Most AI health tools require internet and send data to servers. In rural Sri Lanka, connectivity is unreliable and privacy matters.<br/><br/>
-      <strong>The Solution:</strong> BAYMAX — 1.0 runs locally — health Q&amp;A, symptom checking, medication reminders — all offline, all private. 🔒
+      <strong>The Solution:</strong> BAYMAX — 1.0 runs locally — health Q&A, symptom checking, medication reminders — all offline, all private. 🔒
     </div></div>
   </div>
 
@@ -544,7 +599,7 @@ body {
     <div class="proj-num" style="background:var(--purple);">Project 04</div>
     <h3>SPEAK SILENCE 🤟</h3>
     <p class="proj-short">"They are speaking. You just couldn't hear them — until now."</p>
-    <p class="proj-short" style="margin-top:8px;">A <strong>gesture recognition app</strong> for deaf and mute patients in hospitals — hand gestures converted into text and voice in Sinhala and English, instantly.</p>
+    <p class="proj-short" style="margin-top:8px;">A <strong>gesture recognition app</strong> for deaf and mute patients in hospitals — hand gestures converted into text and voice in Sinhala and English.</p>
     <div class="proj-tech"><span>MediaPipe</span><span>OpenCV</span><span>Scikit-learn</span><span>gTTS</span><span>Python</span></div>
     <button class="see-more-btn" onclick="toggleDetail(this)">See More <span class="arrow">›</span></button>
     <div class="proj-detail"><div class="proj-detail-inner">
@@ -619,25 +674,25 @@ body {
   <div class="contact-grid stagger">
     <a class="contact-card" href="https://www.instagram.com/nsy_rathnayaka_/" target="_blank">
       <div class="cc-icon" style="background:#E1306C;">
-        <svg viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.66 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.257 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1 1 12.324 0 6.162 6.162 0 0 1-12.324 0zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm4.965-10.322a1.44 1.44 0 1 1 2.881.001 1.44 1.44 0 0 1-2.881-.001z"/></svg>
+        <svg viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.66 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zM5.838 12a6.162 6.162 0 1 1 12.324 0 6.162 6.162 0 0 1-12.324 0zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm4.965-10.322a1.44 1.44 0 1 1 2.881.001 1.44 1.44 0 0 1-2.881-.001z"/></svg>
       </div>
       <span class="cc-name">Instagram</span>
     </a>
     <a class="contact-card" href="mailto:seminirathnayaka.yt@gmail.com">
       <div class="cc-icon" style="background:#EA4335;">
-        <svg viewBox="0 0 24 24" fill="white"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 5.45c.546.435 1.308.435 1.854 0l.545-.431C9.661 2.289 11.727 2.289 13.455 3.62l.545.431c.546.435 1.308.435 1.854 0l1.549-1.223c1.618-1.214 3.927-.059 3.927 1.964z"/></svg>
+        <svg viewBox="0 0 24 24" fill="white"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.741 4.368 12 8.846l6.259-4.478c1.629-1.214 3.927-.059 3.927 1.964z"/></svg>
       </div>
       <span class="cc-name">Gmail</span>
     </a>
     <a class="contact-card" href="https://github.com/SeminiRathnayaka" target="_blank">
       <div class="cc-icon" style="background:#24292e;">
-        <svg viewBox="0 0 24 24" fill="white"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v 3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        <svg viewBox="0 0 24 24" fill="white"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v 3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
       </div>
       <span class="cc-name">GitHub</span>
     </a>
     <a class="contact-card" href="https://www.linkedin.com/in/semini-rathnayaka-07a72b393" target="_blank">
       <div class="cc-icon" style="background:#0077B5;">
-        <svg viewBox="0 0 24 24" fill="white"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.31-1.85 3.537 0 4.189 2.327 4.189 5.353v6.388zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg>
+        <svg viewBox="0 0 24 24" fill="white"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.3-1.85 3.527 0 4.18 2.324 4.18 5.347v6.394zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.062 2.062 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg>
       </div>
       <span class="cc-name">LinkedIn</span>
     </a>
@@ -656,7 +711,7 @@ body {
 <!-- ── TWO-PANEL ── -->
 <div class="one-panel reveal">
   <a class="panel" href="#" target="_blank">
-    <img class="panel-logo" src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAA=" alt="orayan logo"/>
+    <img class="panel-logo" src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAA" alt="Orayan AI"/>
     <h3>Orayan AI</h3>
     <p>Try Out the Project</p>
     <div class="panel-arrow">→</div>
@@ -789,9 +844,8 @@ let mouseX = 0;
 let mouseY = 0;
 let cursorX = 0;
 let cursorY = 0;
-const speed = 0.15; // Lerp speed (0.1-0.2 for smooth trailing effect)
+const speed = 0.15;
 
-// Interactive elements that trigger hover
 const interactiveElements = document.querySelectorAll(
   'a, button, .contact-card, .panel, .chip, .cv-btn, .see-more-btn, .send-btn, input, textarea'
 );
@@ -806,7 +860,6 @@ interactiveElements.forEach(el => {
   el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
 });
 
-// Smooth lerp animation with requestAnimationFrame
 function animateCursor() {
   cursorX += (mouseX - cursorX) * speed;
   cursorY += (mouseY - cursorY) * speed;
