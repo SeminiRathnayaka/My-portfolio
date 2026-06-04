@@ -310,9 +310,9 @@ body {
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
   border-radius:16px; padding:clamp(18px,3vw,24px) clamp(20px,3.5vw,26px); margin-bottom:22px;
-  border-left:4px solid var(--yellow); transition:transform 0.25s,box-shadow 0.25s;
+  border-left:4px solid var(--yellow); transition:transform 0.4s cubic-bezier(.34,1.56,.64,1),box-shadow 0.4s ease;
 }
-.proj-card:hover { transform:translateY(-3px); box-shadow:0 10px 30px rgba(0,0,0,0.1); }
+.proj-card:hover { transform:translateY(-8px) scale(1.018); box-shadow:0 20px 48px rgba(0,0,0,0.14); }
 .proj-num { display:inline-block; font-size:clamp(0.62rem,1.5vw,0.74rem); font-weight:900; letter-spacing:2px; text-transform:uppercase; color:var(--white); padding:4px 13px; border-radius:20px; margin-bottom:10px; }
 .proj-card h3 { font-family:'Playfair Display',serif; font-size:clamp(1rem,2.5vw,1.28rem); font-weight:700; margin-bottom:9px; }
 .proj-short { font-size:clamp(0.85rem,2vw,0.97rem); color:var(--text-mid); line-height:1.72; }
@@ -455,42 +455,44 @@ body {
 @keyframes heroFade { from{opacity:0;transform:translateY(-16px);} to{opacity:1;transform:translateY(0);} }
 
 /* ── BIDIRECTIONAL SCROLL REVEAL ── */
+/* ── SCROLL REVEAL — smooth cubic-bezier ── */
 .reveal {
-  opacity:0; transform:translateY(32px);
-  transition:opacity 0.65s ease, transform 0.65s ease;
+  opacity:0; transform:translateY(38px);
+  transition:opacity 0.75s cubic-bezier(.4,0,.2,1), transform 0.75s cubic-bezier(.34,1.2,.64,1);
 }
 .reveal.visible { opacity:1 !important; transform:translateY(0) !important; }
-.reveal.hide    { opacity:0 !important; transform:translateY(32px) !important; }
+.reveal.hide    { opacity:0 !important; transform:translateY(38px) !important; }
 
+/* proj cards on desktop: slide from LEFT */
 .reveal-l {
-  opacity:0; transform:translateX(-28px);
-  transition:opacity 0.6s ease, transform 0.6s ease;
+  opacity:0; transform:translateX(-36px);
+  transition:opacity 0.65s cubic-bezier(.4,0,.2,1), transform 0.65s cubic-bezier(.34,1.2,.64,1);
 }
 .reveal-l.visible { opacity:1 !important; transform:translateX(0) !important; }
-.reveal-l.hide    { opacity:0 !important; transform:translateX(-28px) !important; }
+.reveal-l.hide    { opacity:0 !important; transform:translateX(-36px) !important; }
 
 .bubble {
-  opacity:0; transform:translateY(16px);
-  transition:opacity 0.5s ease, transform 0.5s ease;
+  opacity:0; transform:translateY(18px);
+  transition:opacity 0.55s cubic-bezier(.4,0,.2,1), transform 0.55s cubic-bezier(.34,1.4,.64,1);
 }
 .bubble.visible { opacity:1 !important; transform:translateY(0) !important; }
-.bubble.hide    { opacity:0 !important; transform:translateY(16px) !important; }
-.bubble:nth-child(2){transition-delay:0.12s;}
-.bubble:nth-child(3){transition-delay:0.24s;}
+.bubble.hide    { opacity:0 !important; transform:translateY(18px) !important; }
+.bubble:nth-child(2){transition-delay:0.13s;}
+.bubble:nth-child(3){transition-delay:0.26s;}
 
 .stagger > * {
-  opacity:0; transform:translateY(20px);
-  transition:opacity 0.45s ease, transform 0.45s ease;
+  opacity:0; transform:translateY(22px);
+  transition:opacity 0.5s cubic-bezier(.4,0,.2,1), transform 0.5s cubic-bezier(.34,1.3,.64,1);
 }
 .stagger.visible > *:nth-child(1){opacity:1;transform:none;transition-delay:0s;}
-.stagger.visible > *:nth-child(2){opacity:1;transform:none;transition-delay:.07s;}
-.stagger.visible > *:nth-child(3){opacity:1;transform:none;transition-delay:.14s;}
-.stagger.visible > *:nth-child(4){opacity:1;transform:none;transition-delay:.21s;}
-.stagger.visible > *:nth-child(5){opacity:1;transform:none;transition-delay:.28s;}
-.stagger.visible > *:nth-child(6){opacity:1;transform:none;transition-delay:.35s;}
-.stagger.visible > *:nth-child(7){opacity:1;transform:none;transition-delay:.42s;}
-.stagger.visible > *:nth-child(8){opacity:1;transform:none;transition-delay:.49s;}
-.stagger.hide > *{ opacity:0 !important; transform:translateY(20px) !important; transition-delay:0s !important; }
+.stagger.visible > *:nth-child(2){opacity:1;transform:none;transition-delay:.08s;}
+.stagger.visible > *:nth-child(3){opacity:1;transform:none;transition-delay:.16s;}
+.stagger.visible > *:nth-child(4){opacity:1;transform:none;transition-delay:.24s;}
+.stagger.visible > *:nth-child(5){opacity:1;transform:none;transition-delay:.32s;}
+.stagger.visible > *:nth-child(6){opacity:1;transform:none;transition-delay:.40s;}
+.stagger.visible > *:nth-child(7){opacity:1;transform:none;transition-delay:.48s;}
+.stagger.visible > *:nth-child(8){opacity:1;transform:none;transition-delay:.56s;}
+.stagger.hide > *{ opacity:0 !important; transform:translateY(22px) !important; transition-delay:0s !important; }
 
 /* ── RESPONSIVE ── */
 @media (max-width:600px) {
@@ -501,6 +503,66 @@ body {
   .two-panel { grid-template-columns:1fr; gap:12px; }
   .skills-grid { grid-template-columns:1fr; }
   div[style*="grid-template-columns:1.4fr"] { grid-template-columns:1fr !important; }
+
+  /* ── MOBILE PROJECT HORIZONTAL SCROLL ── */
+  .proj-scroll-outer {
+    margin: 0 -18px; /* bleed past .wrap padding */
+    padding: 0 18px 20px;
+    overflow-x: scroll;
+    display: flex;
+    gap: 14px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .proj-scroll-outer::-webkit-scrollbar { display: none; }
+
+  /* each card: full snap width, slide from RIGHT */
+  .proj-scroll-outer .proj-card {
+    min-width: 84vw;
+    max-width: 84vw;
+    margin-bottom: 0;
+    flex-shrink: 0;
+    scroll-snap-align: center;
+    /* override desktop reveal-l (translateX left → right instead) */
+    opacity: 0;
+    transform: translateX(44px) !important;
+    transition: opacity 0.55s cubic-bezier(.4,0,.2,1),
+                transform 0.55s cubic-bezier(.34,1.2,.64,1),
+                box-shadow 0.4s ease !important;
+  }
+  .proj-scroll-outer .proj-card.visible {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+  }
+  .proj-scroll-outer .proj-card.hide {
+    opacity: 0 !important;
+    transform: translateX(44px) !important;
+  }
+  /* stagger each card slightly */
+  .proj-scroll-outer .proj-card:nth-child(2){ transition-delay: 0.06s !important; }
+  .proj-scroll-outer .proj-card:nth-child(3){ transition-delay: 0.12s !important; }
+  .proj-scroll-outer .proj-card:nth-child(4){ transition-delay: 0.18s !important; }
+  .proj-scroll-outer .proj-card:nth-child(5){ transition-delay: 0.24s !important; }
+
+  /* scroll hint dots */
+  .proj-scroll-dots {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 14px;
+  }
+  .proj-scroll-dots span {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--yellow-light);
+    transition: background 0.3s, transform 0.3s;
+    display: inline-block;
+  }
+  .proj-scroll-dots span.active {
+    background: var(--yellow-dark);
+    transform: scale(1.35);
+  }
 }
 @media (min-width:601px) and (max-width:900px) {
   .abilities-grid { grid-template-columns:repeat(4,1fr); }
@@ -608,6 +670,8 @@ body {
 <div class="wrap" style="padding-top:28px;padding-bottom:38px;">
   <div class="sec-title reveal">— Projects 🛠️</div>
 
+  <div class="proj-scroll-outer" id="projScroll">
+
   <div class="proj-card reveal-l">
     <div class="proj-num" style="background:var(--coral);">Project 01</div>
     <h3>Orayan AI 🌿</h3>
@@ -676,6 +740,9 @@ body {
       <strong>Why games?</strong> Sharpens algorithmic thinking and UI design — skills that feed directly into AI and robotics. 🎮
     </div></div>
   </div>
+
+  </div><!-- /proj-scroll-outer -->
+  <div class="proj-scroll-dots" id="projDots"></div>
 </div>
 
 <div class="div"></div>
@@ -891,6 +958,32 @@ function sendEmail() {
     + encodeURIComponent(msg + '\n\nFrom: ' + name + ' (' + email + ')');
   document.getElementById('formSuccess').style.display = 'block';
 }
+
+/* ── MOBILE PROJECT SCROLL DOTS ── */
+(function() {
+  const scroll = document.getElementById('projScroll');
+  const dotsWrap = document.getElementById('projDots');
+  if (!scroll || !dotsWrap) return;
+
+  const cards = scroll.querySelectorAll('.proj-card');
+  // only run on mobile
+  if (window.innerWidth > 600) return;
+
+  // build dots
+  cards.forEach((_, i) => {
+    const d = document.createElement('span');
+    if (i === 0) d.classList.add('active');
+    dotsWrap.appendChild(d);
+  });
+
+  const dots = dotsWrap.querySelectorAll('span');
+
+  scroll.addEventListener('scroll', () => {
+    const cardW = cards[0].offsetWidth + 14; // width + gap
+    const idx = Math.round(scroll.scrollLeft / cardW);
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+  }, { passive: true });
+})();
 
 /* ── CURSOR ── */
 const dot = document.querySelector('.cursor-dot');
