@@ -122,8 +122,8 @@
 
 .theme-btn {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  top: 60px;
+  right: 90px;
   z-index: 9999;
   font-size: 20px;
   background: var(--yellow);
@@ -1046,6 +1046,7 @@ function sendEmail() {
     });
 }
 </script>
+
 <script>
 const seen = new WeakSet();
 const obs = new IntersectionObserver(entries => {
@@ -1217,6 +1218,48 @@ navLinks.querySelectorAll('a').forEach(function(link) {
     hamburger.textContent = '☰';
   });
 });
+</script>
+<script>
+  // ── THEME TOGGLE ──
+  const toggleBtn = document.getElementById('themeToggle');
+
+  // Step 1: Check if user already made a choice before (saved in localStorage)
+  const savedTheme = localStorage.getItem('theme');
+
+  if (savedTheme) {
+    // User has chosen before — use their choice
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    toggleBtn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+  } else {
+    // No saved choice — auto detect based on current time
+    const hour = new Date().getHours(); // 0 to 23
+    const isNight = hour < 6 || hour >= 18; // night = before 6am or after 6pm
+
+    if (isNight) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggleBtn.textContent = '☀️';
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      toggleBtn.textContent = '🌙';
+    }
+  }
+
+  // Step 2: When user clicks the button, switch theme and save their choice
+  toggleBtn.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+
+    if (current === 'dark') {
+      // Switch to light
+      document.documentElement.removeAttribute('data-theme');
+      toggleBtn.textContent = '🌙';
+      localStorage.setItem('theme', 'light'); // remember choice
+    } else {
+      // Switch to dark
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggleBtn.textContent = '☀️';
+      localStorage.setItem('theme', 'dark'); // remember choice
+    }
+  });
 </script>
 </body>
 </html>
