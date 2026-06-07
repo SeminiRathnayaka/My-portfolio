@@ -681,6 +681,22 @@ body {
   .two-panel { gap:14px; }
   .bio-section { flex-wrap:nowrap; }
 }
+/* ── MOBILE FIX ── */
+@media (max-width: 768px) {
+  .proj-card:hover {
+    transform: none;
+    box-shadow: var(--shadow);
+  }
+
+  .proj-card:hover .proj-img {
+    transform: none;
+    filter: brightness(0.92) saturate(1.1);
+  }
+
+  .proj-card {
+    transition: none;
+  }
+}
 
 </style>
 </head>
